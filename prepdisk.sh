@@ -1,6 +1,6 @@
-echo "Select a disk: "
 lsblk
 echo ""
+echo "Select a Disk: "
 read DISK
 
 sgdisk -Z ${DISK}               # Erase partition table
