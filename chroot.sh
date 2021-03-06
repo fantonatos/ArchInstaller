@@ -19,7 +19,7 @@ echo "${HOSTNAME}" >> /etc/hostname
 touch /etc/hosts
 echo "127.0.0.1	localhost" >> /etc/hosts
 echo "::1		localhost" >> /etc/hosts
-echo "127.0.1.1	${HOSTNAME}.localdomain	${HOSTNAME}"
+echo "127.0.1.1	${HOSTNAME}.localdomain	${HOSTNAME}" >> /etc/hosts
 
 echo "Set root password: "
 passwd
