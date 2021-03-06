@@ -28,7 +28,7 @@ echo "Adding new user."
 echo "Enter username: "
 read USERNAME
 useradd -m ${USERNAME}
-passwd USERNAME
+passwd ${USERNAME}
 usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 
 # Install the bootloader
