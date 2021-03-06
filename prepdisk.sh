@@ -1,7 +1,9 @@
-lsblk
+#!/bin/bash
+
 echo ""
-echo "Select a Disk: "
-read DISK
+lsblk -f
+echo ""
+read -p "Select a Disk [Example /dev/sda]: " DISK
 
 sgdisk -Z ${DISK}               # Erase partition table
 sgdisk -a 2048 -o ${DISK}       # Create GUID Partition Table

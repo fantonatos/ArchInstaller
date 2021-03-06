@@ -1,10 +1,10 @@
+#!/bin/bash
+
 echo ""
 lsblk -f
 echo ""
-echo "Select the Operating System Partition: "
-read DISK
-echo "Select the Swap Partition: "
-read SWAPDISK
+read -p "Select the Operating System Partition [Example /dev/sda1]: " DISK
+read -p "Select the Swap Partition: " SWAPDISK
 
 mount ${DISK} /mnt
 swapon ${SWAPDISK}

@@ -1,3 +1,4 @@
+#!/bin/bash
 # This script runs inside the target machine
 
 # Configure the system time and localization
@@ -10,8 +11,7 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # Setup hostname and user accounts
 echo ""
-echo "Enter the hostname: "
-read HOSTNAME
+read -p "Enter the hostname: " HOSTNAME
 
 touch /etc/hostname
 echo "${HOSTNAME}" >> /etc/hostname
@@ -21,13 +21,13 @@ echo "127.0.0.1	localhost" >> /etc/hosts
 echo "::1		localhost" >> /etc/hosts
 echo "127.0.1.1	${HOSTNAME}.localdomain	${HOSTNAME}" >> /etc/hosts
 
-echo "Set root password: "
+echo "Set up password for root user..."
 passwd
 
-echo "Adding new user."
-echo "Enter username: "
-read USERNAME
+echo "Adding new user..."
+read -p "Enter username: " USERNAME
 useradd -m ${USERNAME}
+echo "Set up password for ${USERNAME}."
 passwd ${USERNAME}
 usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 
@@ -52,5 +52,5 @@ echo ""
 
 pacman -S  vim man-db man-pages  networkmanager git
 
-# Exit the chroot
+echo "Finished Installing Essential Packages... Exiting chroot."
 exit
