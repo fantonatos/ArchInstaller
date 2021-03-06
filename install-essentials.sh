@@ -14,6 +14,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 # Copy chroot.sh to the new system and run the script
 cp chroot.sh /mnt/chroot.sh
+chmod +x /mnt/chroot.sh
 arch-chroot /mnt ./chroot.sh
 
 # We are back out of the chroot.
