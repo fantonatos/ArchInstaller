@@ -1,6 +1,6 @@
 # ArchInstaller
 
-After booting into the official Arch Linux installation media, update your package repositories and install git with `pacman -Syu git`, then download and run the installer with these commands:
+After booting into the official Arch Linux installation media, check your internet connection, and sync your system clock with `timedatectl set-ntp true`. Update your package repositories and install git with `pacman -Syu git`, then download and run the installer with these commands:
 
 ```
 git clone https://github.com/fantonatos/ArchInstaller.git && cd ArchInstaller
