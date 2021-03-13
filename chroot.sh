@@ -1,6 +1,23 @@
 #!/bin/bash
 # This script runs inside the target machine
 
+# Ask the user for UEFI or BIOS boot
+function askboot()
+{
+	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
+	if [ "$BOOT" == "UEFI" ]
+	then
+		echo "Selected UEFI."
+		return "UEFI"
+	elif [ "$BOOT" == "BIOS" ]
+	then
+		echo "Selected BIOS."
+		return "BIOS"
+	else
+		boottype
+	fi
+}
+
 # Configure the system time and localization
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
@@ -35,13 +52,24 @@ usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 echo ""
 echo "Installing Grub Bootloader..."
 echo ""
+BOOT=askboot
 
-pacman -S grub efibootmgr dosfstools os-prober mtools
+if [ "$BOOT" == "UEFI" ] then
+    pacman -S grub efibootmgr dosfstools os-prober mtools
+    mkdir /boot/EFI
+    mount /dev/sda1 /boot/EFI
+    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+else
+    pacman -S grub dosfstools os-prober mtools
+    mkdir /boot
+    mount /dev/sda1 /boot
+    grub-install
+fi
 
-mkdir /boot/EFI
-mount /dev/sda1 /boot/EFI
-grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
+echo ""
+echo "Installed Grub for ${BOOT}"
+echo ""
 
 systemctl enable NetworkManager
 
