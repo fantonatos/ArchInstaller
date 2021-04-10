@@ -25,7 +25,8 @@ sgdisk -c 3:"ROOT" ${DISK}
 echo "-------------------------------"
 echo "Format Partitions and Make Swap"
 mkfs.vfat -F32 -n "UEFISYS" "${DISK}1"      # Format partitions
-mkswap "${DISK}2"
+mkswap ${DISK}2
+swapon ${DISK}2
 mkfs.ext4 -L "ROOT" "${DISK}3"
 
 echo "-------------------------------------------"

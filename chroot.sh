@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 # This script runs inside the target machine
 
-# Ask the user for UEFI or BIOS boot
+echo "---------------------------------"
+echo "chroot: Running inside new system"
+
+# Asks the user for UEFI or BIOS boot
 function askboot()
 {
 	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
@@ -14,7 +17,7 @@ function askboot()
 		echo "Selected BIOS."
 		return "BIOS"
 	else
-		boottype
+		askboot
 	fi
 }
 
@@ -49,7 +52,7 @@ passwd ${USERNAME}
 usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 
 # Install the bootloader
-echo ""
+echo "-----------------------------"
 echo "Installing Grub Bootloader..."
 echo ""
 BOOT=askboot
@@ -69,16 +72,17 @@ fi
 grub-mkconfig -o /boot/grub/grub.cfg
 echo ""
 echo "Installed Grub for ${BOOT}"
-echo ""
+echo "--------------------------"
 
+pacman -S networkmanager --noconfirm
 systemctl enable NetworkManager
 
 # Install extra software
-echo ""
+echo "---------------------------"
 echo "Installing more software..."
 echo ""
 
-pacman -S  vim man-db man-pages  networkmanager git
+pacman -S vim man-db man-pages git --noconfirm
 
 echo "Finished Installing Essential Packages... Exiting chroot."
 exit

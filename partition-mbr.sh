@@ -16,6 +16,7 @@ echo "-------------------------------"
 echo "Format Partitions and Make Swap"
 mkfs.ext4 -F ${DEV}1
 mkswap -f ${DEV}2
+swapon ${DEV}2
 
 echo "-------------------------------------------"
 echo "${DEV}: Created and formatted partitions."
