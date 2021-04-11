@@ -55,19 +55,18 @@ usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 echo "-----------------------------"
 echo "Installing Grub Bootloader..."
 echo ""
-BOOT=askboot
+#BOOT=askboot
 
-if [ "$BOOT" == "UEFI" ] then
-    pacman -S grub efibootmgr dosfstools os-prober mtools
-    mkdir /boot/EFI
-    mount /dev/sda1 /boot/EFI
-    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-else
-    pacman -S grub dosfstools os-prober mtools
-    mkdir /boot
-    mount /dev/sda1 /boot
-    grub-install
-fi
+#if [ "$BOOT" == "UEFI" ] then
+#    pacman -S grub efibootmgr dosfstools os-prober mtools
+#    mkdir /boot/EFI
+#    mount /dev/sda1 /boot/EFI
+#    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+#else
+pacman -S grub dosfstools mtools
+mount /dev/sda1 /boot
+grub-install
+#fi
 
 grub-mkconfig -o /boot/grub/grub.cfg
 echo ""
