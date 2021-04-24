@@ -4,22 +4,24 @@
 echo "---------------------------------"
 echo "chroot: Running inside new system"
 
-# Asks the user for UEFI or BIOS boot
-function askboot()
-{
-	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
-	if [ "$BOOT" == "UEFI" ]
-	then
-		echo "Selected UEFI."
-		return "UEFI"
-	elif [ "$BOOT" == "BIOS" ]
-	then
-		echo "Selected BIOS."
-		return "BIOS"
-	else
-		askboot
-	fi
-}
+# UEFI is not working at the moment.
+
+# # Asks the user for UEFI or BIOS boot
+# function askboot()
+# {
+# 	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
+# 	if [ "$BOOT" == "UEFI" ]
+# 	then
+# 		echo "Selected UEFI."
+# 		return "UEFI"
+# 	elif [ "$BOOT" == "BIOS" ]
+# 	then
+# 		echo "Selected BIOS."
+# 		return "BIOS"
+# 	else
+# 		askboot
+# 	fi
+# }
 
 # Configure the system time and localization
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
@@ -63,25 +65,22 @@ echo ""
 #    mount /dev/sda1 /boot/EFI
 #    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 #else
-pacman -S grub dosfstools mtools
-mount /dev/sda1 /boot
-grub-install
+pacman -S grub dosfstools mtools --noconfirm && grub-install && grub-mkconfig -o /boot/grub/grub.cfg
 #fi
 
-grub-mkconfig -o /boot/grub/grub.cfg
-echo ""
-echo "Installed Grub for ${BOOT}"
-echo "--------------------------"
 
-pacman -S networkmanager --noconfirm
-systemctl enable NetworkManager
+echo ""
+echo "Installed Grub"
+echo "--------------"
+
+pacman -S networkmanager --noconfirm && systemctl enable NetworkManager
 
 # Install extra software
 echo "---------------------------"
 echo "Installing more software..."
 echo ""
 
-pacman -S vim man-db man-pages git --noconfirm
+pacman -S neovim man-db man-pages git --noconfirm
 
 echo "Finished Installing Essential Packages... Exiting chroot."
 exit
