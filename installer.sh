@@ -9,7 +9,7 @@ sleep 5
 
 echo "-------------------"
 echo "Updating packages"
-pacman -Syu --noconfirm
+pacman -Sy --noconfirm
 
 echo "---------------------------------"
 lsblk -f
@@ -32,8 +32,9 @@ chmod +x /mnt/chroot.sh
 arch-chroot /mnt ./chroot.sh
 
 # We are back out of the chroot
+read -p "Installation Completed. If you wish to make further changes, hit CTRL-C to leave partitions mounted. "
 rm /mnt/chroot.sh
 umount -l /mnt
 echo "====================================="
-echo "Installation scripts done."
-echo "Remove installation media and reboot."
+echo "Partitions were unmounted."
+echo "You can remove installation media and reboot."
