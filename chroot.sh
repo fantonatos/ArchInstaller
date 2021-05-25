@@ -1,22 +1,27 @@
-#!/bin/bash
+#!/bin/sh
 # This script runs inside the target machine
 
-# Ask the user for UEFI or BIOS boot
-function askboot()
-{
-	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
-	if [ "$BOOT" == "UEFI" ]
-	then
-		echo "Selected UEFI."
-		return "UEFI"
-	elif [ "$BOOT" == "BIOS" ]
-	then
-		echo "Selected BIOS."
-		return "BIOS"
-	else
-		boottype
-	fi
-}
+echo "---------------------------------"
+echo "chroot: Running inside new system"
+
+# UEFI is not working at the moment.
+
+# # Asks the user for UEFI or BIOS boot
+# function askboot()
+# {
+# 	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
+# 	if [ "$BOOT" == "UEFI" ]
+# 	then
+# 		echo "Selected UEFI."
+# 		return "UEFI"
+# 	elif [ "$BOOT" == "BIOS" ]
+# 	then
+# 		echo "Selected BIOS."
+# 		return "BIOS"
+# 	else
+# 		askboot
+# 	fi
+# }
 
 # Configure the system time and localization
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
@@ -49,36 +54,33 @@ passwd ${USERNAME}
 usermod -aG wheel,audio,video,optical,storage ${USERNAME}
 
 # Install the bootloader
-echo ""
+echo "-----------------------------"
 echo "Installing Grub Bootloader..."
 echo ""
-BOOT=askboot
+#BOOT=askboot
 
-if [ "$BOOT" == "UEFI" ] then
-    pacman -S grub efibootmgr dosfstools os-prober mtools
-    mkdir /boot/EFI
-    mount /dev/sda1 /boot/EFI
-    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-else
-    pacman -S grub dosfstools os-prober mtools
-    mkdir /boot
-    mount /dev/sda1 /boot
-    grub-install
-fi
+#if [ "$BOOT" == "UEFI" ] then
+#    pacman -S grub efibootmgr dosfstools os-prober mtools
+#    mkdir /boot/EFI
+#    mount /dev/sda1 /boot/EFI
+#    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+#else
+pacman -S grub dosfstools mtools --noconfirm && grub-install && grub-mkconfig -o /boot/grub/grub.cfg
+#fi
 
-grub-mkconfig -o /boot/grub/grub.cfg
+
 echo ""
-echo "Installed Grub for ${BOOT}"
-echo ""
+echo "Installed Grub"
+echo "--------------"
 
-systemctl enable NetworkManager
+pacman -S networkmanager --noconfirm && systemctl enable NetworkManager
 
 # Install extra software
-echo ""
+echo "---------------------------"
 echo "Installing more software..."
 echo ""
 
-pacman -S  vim man-db man-pages  networkmanager git
+pacman -S neovim man-db man-pages git --noconfirm
 
 echo "Finished Installing Essential Packages... Exiting chroot."
 exit

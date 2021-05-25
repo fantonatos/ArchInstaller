@@ -1,10 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 
 echo ""
 lsblk -f
 echo ""
 read -p "Select a Disk [Example /dev/sda]: " DISK
 
+echo "-------------------------------"
+echo "Running sgdisk"
 sgdisk -Z ${DISK}               # Erase partition table
 sgdisk -a 2048 -o ${DISK}       # Create GUID Partition Table
 
@@ -20,6 +22,15 @@ sgdisk -c 1:"UEFISYS" ${DISK}   # Apply partition labels
 sgdisk -c 2:"SWAP" ${DISK}
 sgdisk -c 3:"ROOT" ${DISK}
 
+echo "-------------------------------"
+echo "Format Partitions and Make Swap"
 mkfs.vfat -F32 -n "UEFISYS" "${DISK}1"      # Format partitions
-mkswap "${DISK}2"
+mkswap ${DISK}2
+swapon ${DISK}2
 mkfs.ext4 -L "ROOT" "${DISK}3"
+
+echo "-------------------------------------------"
+echo "${DISK}: Created and formatted partitions."
+echo "${DISK}1: UEFI Boot Partition"
+echo "${DISK}2: Linux Swap"
+echo "${DISK}3: ext4"
