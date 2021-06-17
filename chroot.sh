@@ -5,22 +5,20 @@
 echo "---------------------------------"
 echo "chroot: Running inside new system"
 
+
 # Configure the system time and localization
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
-touch /etc/locale.conf
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+
 
 # Setup hostname and user accounts
 echo ""
 read -rp "Enter the hostname: " HOSTNAME
-
-touch /etc/hostname
 echo "${HOSTNAME}" >> /etc/hostname
 
-touch /etc/hosts
 {
     echo "127.0.0.1	localhost"
     echo "::1		localhost"
@@ -37,8 +35,9 @@ echo "Set up password for ${USERNAME}."
 passwd "${USERNAME}"
 usermod -aG wheel,audio,video,optical,storage "${USERNAME}"
 
+
 # Install Packages
-pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplicant wireless_tools iw iproute2 dialog
+pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplicant wireless_tools iw iproute2 dialog intel-ucode
 
 echo "-------------------"
 echo "Configuring Network"
@@ -65,6 +64,7 @@ bootctl --path=/boot install
 {
     echo "title Arch Linux"
     echo "linux /vmlinuz-linux"
+    echo "initrd    /intel-ucode.img"
     echo "initrd    /initramfs-linux.img"
     echo "options   root=$2 rw"
 } > /boot/loader/entries/arch.conf
