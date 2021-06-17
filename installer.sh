@@ -21,6 +21,7 @@ read -rp "Enter the operating system partition: " ROOT
 read -rp "Enter the swap partition: " SWAP
 
 mount "${ROOT}" /mnt
+mkdir -p /mnt/boot && mount "${UEFI}" /mnt/boot
 swapon "${SWAP}"
 
 pacstrap /mnt base linux linux-firmware

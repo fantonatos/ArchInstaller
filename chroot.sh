@@ -43,8 +43,7 @@ pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplican
 echo "-------------------"
 echo "Configuring Network"
 echo "-------------------"
-cp files/en.network /etc/systemd/network/
-cp files/wl.network /etc/systemd/network/
+cp files/*.network /etc/systemd/network/
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 
@@ -56,8 +55,6 @@ systemctl enable wpa_supplicant
 echo "-----------------------------"
 echo "Installing Bootloader..."
 echo ""
-mkdir -p /boot
-mount "$1" /boot
 bootctl --path=/boot install
 
 {
@@ -69,7 +66,7 @@ bootctl --path=/boot install
     echo "title Arch Linux"
     echo "linux /vmlinuz-linux"
     echo "initrd    /initramfs-linux.img"
-    echo "options   root=/dev/$2 rw"
+    echo "options   root=$2 rw"
 } > /boot/loader/entries/arch.conf
 
 echo "Finished Essential Configuration... Exiting chroot."
