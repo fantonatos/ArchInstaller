@@ -43,12 +43,12 @@ pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplican
 echo "-------------------"
 echo "Configuring Network"
 echo "-------------------"
-cp en.network /etc/systemd/network/
-cp wl.network /etc/systemd/network/
+cp files/en.network /etc/systemd/network/
+cp files/wl.network /etc/systemd/network/
 systemctl enable systemd-networkd
 systemctl enable systemd-resolvd
 
-cp wpa_supplicant-Infected.conf /etc/wpa_supplicant/
+cp files/wpa_supplicant-Infected.conf /etc/wpa_supplicant/
 systemctl enable wpa_supplicant
 
 
