@@ -30,6 +30,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "-------------------------------------"
 echo "chrooting into the new system"
 echo "-------------------------------------"
+cp -r files/ /mnt/
 cp chroot.sh /mnt/chroot.sh
 chmod +x /mnt/chroot.sh
 arch-chroot /mnt ./chroot.sh "${UEFI}" "${ROOT}"
