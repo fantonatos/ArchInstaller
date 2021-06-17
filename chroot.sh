@@ -1,27 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # This script runs inside the target machine
+# How to run: ./chroot.sh efi-dev root-dev
 
 echo "---------------------------------"
 echo "chroot: Running inside new system"
-
-# UEFI is not working at the moment.
-
-# # Asks the user for UEFI or BIOS boot
-# function askboot()
-# {
-# 	read -p "How will this system boot? [Type \"UEFI\" or \"BIOS\"]: " BOOT
-# 	if [ "$BOOT" == "UEFI" ]
-# 	then
-# 		echo "Selected UEFI."
-# 		return "UEFI"
-# 	elif [ "$BOOT" == "BIOS" ]
-# 	then
-# 		echo "Selected BIOS."
-# 		return "BIOS"
-# 	else
-# 		askboot
-# 	fi
-# }
 
 # Configure the system time and localization
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
@@ -33,54 +15,61 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # Setup hostname and user accounts
 echo ""
-read -p "Enter the hostname: " HOSTNAME
+read -rp "Enter the hostname: " HOSTNAME
 
 touch /etc/hostname
 echo "${HOSTNAME}" >> /etc/hostname
 
 touch /etc/hosts
-echo "127.0.0.1	localhost" >> /etc/hosts
-echo "::1		localhost" >> /etc/hosts
-echo "127.0.1.1	${HOSTNAME}.localdomain	${HOSTNAME}" >> /etc/hosts
+{
+    echo "127.0.0.1	localhost"
+    echo "::1		localhost"
+    echo "127.0.1.1	${HOSTNAME}.localdomain	${HOSTNAME}"
+} >> /etc/hosts
 
 echo "Set up password for root user..."
 passwd
 
 echo "Adding new user..."
-read -p "Enter username: " USERNAME
-useradd -m ${USERNAME}
+read -rp "Enter username: " USERNAME
+useradd -m "${USERNAME}"
 echo "Set up password for ${USERNAME}."
-passwd ${USERNAME}
-usermod -aG wheel,audio,video,optical,storage ${USERNAME}
+passwd "${USERNAME}"
+usermod -aG wheel,audio,video,optical,storage "${USERNAME}"
 
-# Install the bootloader
+# Install Packages
+pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplicant wireless_tools iw iproute2 dialog
+
+echo "-------------------"
+echo "Configuring Network"
+echo "-------------------"
+cp en.network /etc/systemd/network/
+cp wl.network /etc/systemd/network/
+systemctl enable systemd-networkd
+systemctl enable systemd-resolvd
+
+cp wpa_supplicant-Infected.conf /etc/wpa_supplicant/
+systemctl enable wpa_supplicant
+
+
+# Install UEFI Bootloader
 echo "-----------------------------"
-echo "Installing Grub Bootloader..."
+echo "Installing Bootloader..."
 echo ""
-#BOOT=askboot
+mkdir /boot && mount "$1" /boot && bootctl --path=/boot install
 
-#if [ "$BOOT" == "UEFI" ] then
-#    pacman -S grub efibootmgr dosfstools os-prober mtools
-#    mkdir /boot/EFI
-#    mount /dev/sda1 /boot/EFI
-#    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-#else
-pacman -S grub dosfstools mtools --noconfirm && grub-install && grub-mkconfig -o /boot/grub/grub.cfg
-#fi
+{
+    echo "timeout 3" 
+    echo "default arch-*"
+} > /boot/loader/loader.conf
 
+{
+    echo "title Arch Linux"
+    echo "linux /vmlinuz-linux"
+    echo "initrd    /initramfs-linux.img"
+    echo "options   root=/dev/$2 rw"
+} > /boot/loader/entries/arch.conf
 
-echo ""
-echo "Installed Grub"
-echo "--------------"
-
-pacman -S networkmanager --noconfirm && systemctl enable NetworkManager
-
-# Install extra software
-echo "---------------------------"
-echo "Installing more software..."
-echo ""
-
-pacman -S neovim man-db man-pages git --noconfirm
-
-echo "Finished Installing Essential Packages... Exiting chroot."
+echo "Finished Essential Configuration... Exiting chroot."
+echo "Bootloader installed to $1"
 exit
