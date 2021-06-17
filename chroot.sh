@@ -46,9 +46,9 @@ echo "-------------------"
 cp files/en.network /etc/systemd/network/
 cp files/wl.network /etc/systemd/network/
 systemctl enable systemd-networkd
-systemctl enable systemd-resolvd
+systemctl enable systemd-resolved
 
-cp files/wpa_supplicant-Infected.conf /etc/wpa_supplicant/
+cp files/wpa_supplicant-*.conf /etc/wpa_supplicant/
 systemctl enable wpa_supplicant
 
 
@@ -56,7 +56,9 @@ systemctl enable wpa_supplicant
 echo "-----------------------------"
 echo "Installing Bootloader..."
 echo ""
-mkdir /boot && mount "$1" /boot && bootctl --path=/boot install
+mkdir -p /boot
+mount "$1" /boot
+bootctl --path=/boot install
 
 {
     echo "timeout 3" 
