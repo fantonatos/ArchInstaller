@@ -37,7 +37,7 @@ usermod -aG wheel,audio,video,optical,storage "${USERNAME}"
 
 
 # Install Packages
-pacman -S --noconfirm man-db man-pages git vim nano openssh ranger wpa_supplicant wireless_tools iw iproute2 dialog intel-ucode
+pacman -S --noconfirm man-db man-pages git vim nano openssh ranger iwd wireless_tools iw iproute2 dialog intel-ucode
 
 echo "-------------------"
 echo "Configuring Network"
@@ -45,9 +45,7 @@ echo "-------------------"
 cp files/*.network /etc/systemd/network/
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
-
-cp files/wpa_supplicant-*.conf /etc/wpa_supplicant/
-systemctl enable wpa_supplicant
+systemctl enable iwd
 
 
 # Install UEFI Bootloader
