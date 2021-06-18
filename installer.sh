@@ -1,24 +1,27 @@
-#!/bin/sh
+#!/bin/bash
 
-read -p "Have you checked your Internet connection? "
-read -p "Have you formatted your disks? If not, do so now. "
+if [[ ! -d /sys/firmware/efi/efivars ]]
+then
+    echo "System is not booted in UEFI mode."
+    exit
+fi
 
-echo "Syncing time" 
+read -rp "Have you checked your Internet connection? "
+read -rp "Have you formatted your disks? If not, do so now. "
+
+echo "Enabling network time"
 timedatectl set-ntp true
-sleep 5
-
-echo "-------------------"
-echo "Updating packages"
-pacman -Sy --noconfirm
 
 echo "---------------------------------"
 lsblk -f
 echo "---------------------------------"
-read -p "Select the operating system partition: " DISK
-read -p "Select the swap partition: " SWAP
+read -rp "Enter the UEFI Boot partition: " UEFI
+read -rp "Enter the operating system partition: " ROOT
+read -rp "Enter the swap partition: " SWAP
 
-mount ${DISK} /mnt
-swapon ${SWAP}
+mount "${ROOT}" /mnt
+mkdir -p /mnt/boot && mount "${UEFI}" /mnt/boot
+swapon "${SWAP}"
 
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -27,14 +30,16 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "-------------------------------------"
 echo "chrooting into the new system"
 echo "-------------------------------------"
+cp -r files/ /mnt/
 cp chroot.sh /mnt/chroot.sh
 chmod +x /mnt/chroot.sh
-arch-chroot /mnt ./chroot.sh
+arch-chroot /mnt ./chroot.sh "${UEFI}" "${ROOT}"
 
 # We are back out of the chroot
-read -p "Installation Completed. If you wish to make further changes, hit CTRL-C to leave partitions mounted. "
+read -rp "Installation Completed. If you wish to make further changes, hit CTRL-C to leave partitions mounted. "
 rm /mnt/chroot.sh
+rm -rf /mnt/files/
 umount -l /mnt
-echo "====================================="
+echo ""
 echo "Partitions were unmounted."
-echo "You can remove installation media and reboot."
+echo "You can remove installation media and reboot into the new system."
