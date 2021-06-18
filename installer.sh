@@ -38,6 +38,7 @@ arch-chroot /mnt ./chroot.sh "${UEFI}" "${ROOT}"
 # We are back out of the chroot
 read -rp "Installation Completed. If you wish to make further changes, hit CTRL-C to leave partitions mounted. "
 rm /mnt/chroot.sh
+rm -rf /mnt/files/
 umount -l /mnt
 echo ""
 echo "Partitions were unmounted."
