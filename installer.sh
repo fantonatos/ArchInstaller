@@ -11,7 +11,6 @@ read -rp "Have you formatted your disks? If not, do so now. "
 
 echo "Enabling network time"
 timedatectl set-ntp true
-sleep 5
 
 echo "---------------------------------"
 lsblk -f
