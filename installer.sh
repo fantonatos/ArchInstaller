@@ -36,9 +36,20 @@ chmod +x /mnt/chroot.sh
 arch-chroot /mnt ./chroot.sh "${UEFI}" "${ROOT}"
 
 # We are back out of the chroot
-read -rp "Installation Completed. If you wish to make further changes, hit CTRL-C to leave partitions mounted. "
 rm /mnt/chroot.sh
 rm -rf /mnt/files/
+echo "Minimal installation completed."
+echo "Next step will install xorg and a desktop environment."
+read -rp "If you wish to make further changes, or do not want a graphical environment, press CTRL-C to exit and leave partitions mounted. "
+
+# Do another chroot with desktop.sh
+cp desktop.sh /mnt/desktop.sh
+arch-chroot /mnt ./desktop.sh "$(ls /home)"
+
+# Back out of 2nd chroot
+rm /mnt/desktop.sh
+read -rp "Full installation completed. If you need to make further changes, press CTRL-C to exit and leave partitions mounted. "
+
 umount -l /mnt
 echo ""
 echo "Partitions were unmounted."
