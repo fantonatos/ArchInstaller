@@ -14,14 +14,14 @@ pacman -S --noconfirm xorg xorg-xinit nvidia xterm \
 {
 	grep -v 'twm\|xclock\|xterm\|exec' /etc/X11/xinit/xinitrc
 	echo 'exec openbox-session'
-} > /home/$1/.xinitrc
+} > "/home/$1/.xinitrc"
 
-mkdir -p /home/$1/.config/openbox/
+mkdir -p "/home/$1/.config/openbox/"
 {
 	echo "picom &"
 	echo "nitrogen --restore &"
 	echo "plank &"
-} > /home/$1/.config/openbox/autostart
+} > "/home/$1/.config/openbox/autostart"
 
 
 # Get Segoe UI Fonts
