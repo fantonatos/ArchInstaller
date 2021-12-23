@@ -20,7 +20,7 @@ Complete installation:
 # Steps
 0. Get the scripts
 
-	You can do that by installing git and cloning this repo, or curl'ing the files in this repo.
+	You can do that by installing git and cloning this repo, or curl'ing these files.
 
 1. Partition and format your drives
    
@@ -32,16 +32,8 @@ Complete installation:
 
 The script will first install a minimally working system, you can finish at that point or continue to install a desktop environment.
 
-## Example:
-
-```
-git clone https://github.com/fantonatos/ArchInstaller.git && cd ArchInstaller
-chmod +x installer.sh
-./installer.sh
-```
-
 You will be prompted several times to enter system-specific information. When the scripts indicate that the installation is complete, you can remove the installation media and reboot into the working system.
 
-# Issues:
+# Issues
 
  - The eduroam JoinNow script uses NetworkManager, which this script does not install.
