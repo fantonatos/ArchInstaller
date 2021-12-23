@@ -7,7 +7,7 @@ Very simple and fast way to install ArchLinux. Runs in about 5 minutes on my PC 
 Minimal installation:
  - Linux kernel, glibc, coreutils, binutils, systemd
  - bash, ssh, git, vim and nano
- - Microcode for Intel:r: CPUs
+ - Microcode for Intel® CPUs
  - systemd-networkd, systemd-resolved, and iwd for networking
  - systemd-boot bootloader
  - Enough programs to have a mostly POSIX-compliant PC
@@ -24,15 +24,15 @@ Complete installation:
 
 1. Partition and format your drives
    
-   This script will not format any partitions. Use whatever file system you like.
+	This script will not format any partitions. Use whatever file system you like.
 
 2. Run `./installer.sh <boot> <swap> <root>` 
    
-   `boot`, `swap`, and `root` are paths to the partitions you want to use. For example, /dev/sda1.
+	`boot`, `swap`, and `root` are paths to the partitions you want to use. For example, /dev/sda1.
 
 The script will first install a minimally working system, you can finish at that point or continue to install a desktop environment.
 
----
+## Example:
 
 ```
 git clone https://github.com/fantonatos/ArchInstaller.git && cd ArchInstaller
