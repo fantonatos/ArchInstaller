@@ -18,7 +18,7 @@ Complete installation:
  - Fonts and wallpapers
 
 # Steps
-0. Get the scripts
+0. Boot with the official Arch Linux live image and get these scripts
 
 	You can do that by installing git and cloning this repo, or curl'ing these files.
 
