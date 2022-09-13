@@ -7,10 +7,10 @@ Very simple and fast way to install ArchLinux. Runs in about 5 minutes on my PC 
 Minimal installation:
  - Linux kernel, glibc, coreutils, binutils, systemd
  - bash, ssh, git, vim and nano
- - Microcode for Intel® CPUs
+ - Updated microcode for Intel® CPUs
  - systemd-networkd, systemd-resolved, and iwd for networking
  - systemd-boot bootloader
- - Enough programs to have a mostly POSIX-compliant PC
+ - Enough software for a mostly POSIX-compliant PC
 
 Complete installation:
  - GNOME desktop environment, firefox
